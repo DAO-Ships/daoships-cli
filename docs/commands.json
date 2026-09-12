@@ -1,0 +1,1894 @@
+{
+  "schemaVersion": 1,
+  "commands": [
+    {
+      "path": "status",
+      "description": "Connection, identity, selected DAO and indexer health",
+      "fields": [],
+      "effect": "read",
+      "category": "Status"
+    },
+    {
+      "path": "doctor",
+      "description": "Check chain identity and indexer freshness",
+      "fields": [],
+      "effect": "read",
+      "category": "Doctor"
+    },
+    {
+      "path": "network list",
+      "description": "Available Quai networks",
+      "fields": [],
+      "effect": "local",
+      "category": "Network"
+    },
+    {
+      "path": "network use",
+      "description": "Set the default network",
+      "fields": [
+        {
+          "name": "network",
+          "label": "Network",
+          "type": "choice",
+          "choices": [
+            "orchard",
+            "mainnet"
+          ]
+        }
+      ],
+      "effect": "local",
+      "category": "Network"
+    },
+    {
+      "path": "config show",
+      "description": "Show public configuration",
+      "fields": [],
+      "effect": "local",
+      "category": "Config"
+    },
+    {
+      "path": "alias set",
+      "description": "Name a DAO, contract or account",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Alias",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Alias"
+    },
+    {
+      "path": "alias list",
+      "description": "List named addresses",
+      "fields": [],
+      "effect": "local",
+      "category": "Alias"
+    },
+    {
+      "path": "alias remove",
+      "description": "Remove an address alias",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Alias",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Alias"
+    },
+    {
+      "path": "wallet watch",
+      "description": "Use a public address without importing a key",
+      "fields": [
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet"
+    },
+    {
+      "path": "wallet create",
+      "description": "Create and encrypt a new Cyprus-1 account",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet",
+      "secret": true
+    },
+    {
+      "path": "wallet import",
+      "description": "Encrypt a private key from a hidden prompt, key file or named environment variable",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "env",
+          "label": "Environment variable (optional)",
+          "type": "text",
+          "optional": true,
+          "hint": "Leave blank for hidden key entry, or pass --key-file."
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet",
+      "secret": true
+    },
+    {
+      "path": "wallet migrate",
+      "description": "Convert a legacy environment wallet into an encrypted keystore",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet",
+      "secret": true
+    },
+    {
+      "path": "wallet import-keystore",
+      "description": "Restore a V3 keystore with a fresh password and encryption",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "file",
+          "label": "Encrypted keystore file",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet",
+      "secret": true
+    },
+    {
+      "path": "wallet export",
+      "description": "Export an encrypted V3 backup to a new file",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "file",
+          "label": "New backup file",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet"
+    },
+    {
+      "path": "wallet verify",
+      "description": "Unlock locally and verify the account identity",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet",
+      "secret": true
+    },
+    {
+      "path": "wallet change-password",
+      "description": "Re-encrypt a wallet with a fresh password",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet",
+      "secret": true
+    },
+    {
+      "path": "wallet list",
+      "description": "List public wallet profiles",
+      "fields": [],
+      "effect": "local",
+      "category": "Wallet"
+    },
+    {
+      "path": "wallet use",
+      "description": "Select an encrypted wallet",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet"
+    },
+    {
+      "path": "wallet remove",
+      "description": "Delete a local wallet and its encrypted keystore after confirmation",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Wallet name",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Wallet",
+      "secret": true
+    },
+    {
+      "path": "dao list",
+      "description": "Discover indexed DAOs",
+      "fields": [],
+      "effect": "read",
+      "category": "Dao"
+    },
+    {
+      "path": "dao use",
+      "description": "Select a DAO for subsequent commands",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": false,
+          "context": "dao"
+        }
+      ],
+      "effect": "local",
+      "category": "Dao"
+    },
+    {
+      "path": "dao show",
+      "description": "Read DAO configuration from chain",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Dao"
+    },
+    {
+      "path": "dao profile",
+      "description": "Read joined DAO metadata and provenance",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Dao"
+    },
+    {
+      "path": "dao treasury",
+      "description": "Read registered treasury assets from chain",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Dao"
+    },
+    {
+      "path": "dao members",
+      "description": "List indexed DAO members",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Dao"
+    },
+    {
+      "path": "dao member",
+      "description": "Read member balances and voting power",
+      "fields": [
+        {
+          "name": "account",
+          "label": "Member address",
+          "type": "address",
+          "optional": true,
+          "context": "from"
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Dao"
+    },
+    {
+      "path": "dao capabilities",
+      "description": "Read the account’s current DAO permissions",
+      "fields": [
+        {
+          "name": "account",
+          "label": "Member address",
+          "type": "address",
+          "optional": true,
+          "context": "from"
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Dao"
+    },
+    {
+      "path": "dao governance",
+      "description": "Prepare a DAO self-call as a governance proposal",
+      "fields": [
+        {
+          "name": "data",
+          "label": "JSON or @file.json",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "write",
+      "category": "Dao"
+    },
+    {
+      "path": "dao ragequit",
+      "description": "Withdraw treasury assets by burning shares and loot",
+      "fields": [
+        {
+          "name": "shares",
+          "label": "Shares to burn",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "loot",
+          "label": "Loot to burn",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "tokens",
+          "label": "Token address array",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "write",
+      "category": "Dao"
+    },
+    {
+      "path": "proposal list",
+      "description": "List DAO proposals",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Proposal"
+    },
+    {
+      "path": "proposal show",
+      "description": "Inspect proposal state, calldata and commitment",
+      "fields": [
+        {
+          "name": "proposal",
+          "label": "Proposal ID",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Proposal"
+    },
+    {
+      "path": "proposal submit",
+      "description": "Submit CALL-only actions for DAO governance",
+      "fields": [
+        {
+          "name": "actions",
+          "label": "Proposal actions",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "details",
+          "label": "Description",
+          "optional": true,
+          "default": "DAOShips proposal"
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "write",
+      "category": "Proposal"
+    },
+    {
+      "path": "proposal vote",
+      "description": "Vote for or against a sponsored proposal",
+      "fields": [
+        {
+          "name": "proposal",
+          "label": "Proposal ID",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "vote",
+          "label": "Your vote",
+          "type": "choice",
+          "choices": [
+            "yes",
+            "no"
+          ]
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "write",
+      "category": "Proposal"
+    },
+    {
+      "path": "proposal sponsor",
+      "description": "Sponsor a proposal",
+      "fields": [
+        {
+          "name": "proposal",
+          "label": "Proposal ID",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "write",
+      "category": "Proposal"
+    },
+    {
+      "path": "proposal cancel",
+      "description": "Cancel a proposal",
+      "fields": [
+        {
+          "name": "proposal",
+          "label": "Proposal ID",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "write",
+      "category": "Proposal"
+    },
+    {
+      "path": "proposal process",
+      "description": "Execute the committed actions and verify their outcome",
+      "fields": [
+        {
+          "name": "proposal",
+          "label": "Proposal ID",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "actions",
+          "label": "Actions or committed calldata",
+          "type": "json",
+          "optional": true,
+          "hint": "Leave empty to fetch indexed calldata and verify it against the chain."
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "write",
+      "category": "Proposal"
+    },
+    {
+      "path": "contract kinds",
+      "description": "List every SDK contract interface",
+      "fields": [],
+      "effect": "local",
+      "category": "Contract"
+    },
+    {
+      "path": "contract methods",
+      "description": "Discover typed reads, writes and overloads",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "BudgetNavigator",
+            "DAOShip",
+            "DAOShipAndVaultLauncher",
+            "DAOShipLauncher",
+            "ERC20TributeNavigator",
+            "LootERC20",
+            "NFTGatedNavigator",
+            "OnboarderNavigator",
+            "Poster",
+            "QuaiVault",
+            "QuaiVaultProxy",
+            "SharesERC20",
+            "SignalNavigator",
+            "SubscriptionNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "QuaiVaultFactory"
+          ]
+        }
+      ],
+      "effect": "local",
+      "category": "Contract"
+    },
+    {
+      "path": "contract events",
+      "description": "Discover event signatures and named fields",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "BudgetNavigator",
+            "DAOShip",
+            "DAOShipAndVaultLauncher",
+            "DAOShipLauncher",
+            "ERC20TributeNavigator",
+            "LootERC20",
+            "NFTGatedNavigator",
+            "OnboarderNavigator",
+            "Poster",
+            "QuaiVault",
+            "QuaiVaultProxy",
+            "SharesERC20",
+            "SignalNavigator",
+            "SubscriptionNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "QuaiVaultFactory"
+          ]
+        }
+      ],
+      "effect": "local",
+      "category": "Contract"
+    },
+    {
+      "path": "contract read",
+      "description": "Read any of the SDK’s contract methods",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "BudgetNavigator",
+            "DAOShip",
+            "DAOShipAndVaultLauncher",
+            "DAOShipLauncher",
+            "ERC20TributeNavigator",
+            "LootERC20",
+            "NFTGatedNavigator",
+            "OnboarderNavigator",
+            "Poster",
+            "QuaiVault",
+            "QuaiVaultProxy",
+            "SharesERC20",
+            "SignalNavigator",
+            "SubscriptionNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "QuaiVaultFactory"
+          ]
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "method",
+          "label": "Method or full signature",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "args",
+          "label": "Arguments",
+          "type": "json",
+          "optional": true,
+          "default": "[]",
+          "hint": "JSON array. Use decimal strings for integers. Overloads require a full signature."
+        }
+      ],
+      "effect": "read",
+      "category": "Contract"
+    },
+    {
+      "path": "contract encode",
+      "description": "Encode any contract write without RPC or signing",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "BudgetNavigator",
+            "DAOShip",
+            "DAOShipAndVaultLauncher",
+            "DAOShipLauncher",
+            "ERC20TributeNavigator",
+            "LootERC20",
+            "NFTGatedNavigator",
+            "OnboarderNavigator",
+            "Poster",
+            "QuaiVault",
+            "QuaiVaultProxy",
+            "SharesERC20",
+            "SignalNavigator",
+            "SubscriptionNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "QuaiVaultFactory"
+          ]
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "method",
+          "label": "Method or full signature",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "args",
+          "label": "Arguments",
+          "type": "json",
+          "optional": true,
+          "default": "[]",
+          "hint": "JSON array. Use decimal strings for integers. Overloads require a full signature."
+        },
+        {
+          "name": "value",
+          "label": "Native value (wei)",
+          "type": "number",
+          "optional": true,
+          "default": "0"
+        }
+      ],
+      "effect": "local",
+      "category": "Contract"
+    },
+    {
+      "path": "contract write",
+      "description": "Simulate and optionally send any SDK contract write",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "BudgetNavigator",
+            "DAOShip",
+            "DAOShipAndVaultLauncher",
+            "DAOShipLauncher",
+            "ERC20TributeNavigator",
+            "LootERC20",
+            "NFTGatedNavigator",
+            "OnboarderNavigator",
+            "Poster",
+            "QuaiVault",
+            "QuaiVaultProxy",
+            "SharesERC20",
+            "SignalNavigator",
+            "SubscriptionNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "QuaiVaultFactory"
+          ]
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "method",
+          "label": "Method or full signature",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "args",
+          "label": "Arguments",
+          "type": "json",
+          "optional": true,
+          "default": "[]",
+          "hint": "JSON array. Use decimal strings for integers. Overloads require a full signature."
+        },
+        {
+          "name": "value",
+          "label": "Native value (wei)",
+          "type": "number",
+          "optional": true,
+          "default": "0"
+        }
+      ],
+      "effect": "write",
+      "category": "Contract"
+    },
+    {
+      "path": "navigator list",
+      "description": "List this DAO’s navigators and trust state",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Navigator"
+    },
+    {
+      "path": "navigator constructors",
+      "description": "Discover the constructor schema for a navigator",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "OnboarderNavigator",
+            "ERC20TributeNavigator",
+            "NFTGatedNavigator",
+            "SignalNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "BudgetNavigator",
+            "SubscriptionNavigator"
+          ]
+        }
+      ],
+      "effect": "local",
+      "category": "Navigator"
+    },
+    {
+      "path": "navigator plan",
+      "description": "Grind a Cyprus-1 address and plan deployment and activation",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "OnboarderNavigator",
+            "ERC20TributeNavigator",
+            "NFTGatedNavigator",
+            "SignalNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "BudgetNavigator",
+            "SubscriptionNavigator"
+          ]
+        },
+        {
+          "name": "config",
+          "label": "Constructor configuration",
+          "type": "json",
+          "hint": "Named constructor fields. navigator constructors lists every field."
+        },
+        {
+          "name": "options",
+          "label": "Endorsement and funding options",
+          "type": "json",
+          "optional": true,
+          "default": "{}",
+          "hint": "Signal requires signalEndorsement: {poster,currentNavigators:[...]}; funding is optional."
+        }
+      ],
+      "effect": "read",
+      "category": "Navigator"
+    },
+    {
+      "path": "navigator deploy",
+      "description": "Prepare or deploy a navigator with bundled SDK bytecode",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "OnboarderNavigator",
+            "ERC20TributeNavigator",
+            "NFTGatedNavigator",
+            "SignalNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "BudgetNavigator",
+            "SubscriptionNavigator"
+          ]
+        },
+        {
+          "name": "config",
+          "label": "Constructor configuration",
+          "type": "json",
+          "hint": "Named constructor fields. navigator constructors lists every field."
+        },
+        {
+          "name": "options",
+          "label": "Endorsement and funding options",
+          "type": "json",
+          "optional": true,
+          "default": "{}",
+          "hint": "Signal requires signalEndorsement: {poster,currentNavigators:[...]}; funding is optional."
+        }
+      ],
+      "effect": "write",
+      "category": "Navigator"
+    },
+    {
+      "path": "navigator execute",
+      "description": "Preview or execute a saved navigator creation plan",
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Saved plan JSON or @file",
+          "type": "json",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Navigator"
+    },
+    {
+      "path": "launch discover",
+      "description": "Verify and discover a launcher’s deployment contracts",
+      "fields": [
+        {
+          "name": "launcher",
+          "label": "Combined launcher",
+          "type": "address",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Launch"
+    },
+    {
+      "path": "launch plan",
+      "description": "Discover factories and mine a complete DAO launch plan",
+      "fields": [
+        {
+          "name": "config",
+          "label": "Launch configuration",
+          "type": "json",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Launch"
+    },
+    {
+      "path": "launch execute",
+      "description": "Simulate or launch a DAO and verify its postconditions",
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Saved plan JSON or @file",
+          "type": "json",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Launch"
+    },
+    {
+      "path": "workflow prepare",
+      "description": "Refresh prerequisites and show an exact workflow step",
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Saved plan JSON or @file",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "step",
+          "label": "Step ID",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Workflow"
+    },
+    {
+      "path": "workflow verify",
+      "description": "Verify a mined deployment, activation or vault setup step",
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Saved plan JSON or @file",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "step",
+          "label": "Step ID",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "hash",
+          "label": "Transaction hash",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Workflow"
+    },
+    {
+      "path": "workflow execute",
+      "description": "Execute a direct transaction step and verify its postconditions",
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Saved plan JSON or @file",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "step",
+          "label": "Step ID",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Workflow"
+    },
+    {
+      "path": "workflow propose",
+      "description": "Submit navigator activation actions to DAO governance",
+      "fields": [
+        {
+          "name": "plan",
+          "label": "Saved plan JSON or @file",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "step",
+          "label": "Step ID",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Workflow"
+    },
+    {
+      "path": "navigator show",
+      "description": "Inspect navigator identity, requirements and indexed state",
+      "fields": [
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Navigator"
+    },
+    {
+      "path": "navigator methods",
+      "description": "Navigator methods across every supported signature",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "OnboarderNavigator",
+            "ERC20TributeNavigator",
+            "NFTGatedNavigator",
+            "SignalNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "BudgetNavigator",
+            "SubscriptionNavigator"
+          ]
+        }
+      ],
+      "effect": "local",
+      "category": "Navigator"
+    },
+    {
+      "path": "navigator read",
+      "description": "Navigator read across every supported signature",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "OnboarderNavigator",
+            "ERC20TributeNavigator",
+            "NFTGatedNavigator",
+            "SignalNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "BudgetNavigator",
+            "SubscriptionNavigator"
+          ]
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "method",
+          "label": "Method or full signature",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "args",
+          "label": "Arguments",
+          "type": "json",
+          "optional": true,
+          "default": "[]",
+          "hint": "JSON array. Use decimal strings for integers. Overloads require a full signature."
+        }
+      ],
+      "effect": "read",
+      "category": "Navigator"
+    },
+    {
+      "path": "navigator write",
+      "description": "Navigator write across every supported signature",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "OnboarderNavigator",
+            "ERC20TributeNavigator",
+            "NFTGatedNavigator",
+            "SignalNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "BudgetNavigator",
+            "SubscriptionNavigator"
+          ]
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "method",
+          "label": "Method or full signature",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "args",
+          "label": "Arguments",
+          "type": "json",
+          "optional": true,
+          "default": "[]",
+          "hint": "JSON array. Use decimal strings for integers. Overloads require a full signature."
+        },
+        {
+          "name": "value",
+          "label": "Native value (wei)",
+          "type": "number",
+          "optional": true,
+          "default": "0"
+        }
+      ],
+      "effect": "write",
+      "category": "Navigator"
+    },
+    {
+      "path": "token info",
+      "description": "Read token name, symbol, precision and supply",
+      "fields": [
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Token"
+    },
+    {
+      "path": "token balance",
+      "description": "Read a token balance in exact base units",
+      "fields": [
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "account",
+          "label": "Member address",
+          "type": "address",
+          "optional": true,
+          "context": "from"
+        }
+      ],
+      "effect": "read",
+      "category": "Token"
+    },
+    {
+      "path": "token transfer",
+      "description": "Transfer tokens or voting power",
+      "fields": [
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "to",
+          "label": "Recipient",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "amount",
+          "label": "Amount (base units)",
+          "type": "number",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Token"
+    },
+    {
+      "path": "token approve",
+      "description": "Approve tokens or voting power",
+      "fields": [
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "to",
+          "label": "Spender",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "amount",
+          "label": "Amount (base units)",
+          "type": "number",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Token"
+    },
+    {
+      "path": "token delegate",
+      "description": "Delegate tokens or voting power",
+      "fields": [
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "to",
+          "label": "Delegate",
+          "type": "address",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Token"
+    },
+    {
+      "path": "balance",
+      "description": "Read a native QUAI balance",
+      "fields": [
+        {
+          "name": "account",
+          "label": "Member address",
+          "type": "address",
+          "optional": true,
+          "context": "from"
+        }
+      ],
+      "effect": "read",
+      "category": "Balance"
+    },
+    {
+      "path": "transfer",
+      "description": "Preview or transfer native QUAI in exact wei",
+      "fields": [
+        {
+          "name": "to",
+          "label": "Recipient",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "amount",
+          "label": "Amount (wei)",
+          "type": "number",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Transfer"
+    },
+    {
+      "path": "indexer tables",
+      "description": "Discover every indexed table and its fields",
+      "fields": [],
+      "effect": "local",
+      "category": "Indexer"
+    },
+    {
+      "path": "indexer state",
+      "description": "Read the current indexing checkpoint",
+      "fields": [],
+      "effect": "read",
+      "category": "Indexer"
+    },
+    {
+      "path": "indexer list",
+      "description": "List indexed rows with typed filters",
+      "fields": [
+        {
+          "name": "table",
+          "label": "Indexer table",
+          "type": "choice",
+          "choices": [
+            "daos",
+            "members",
+            "proposals",
+            "votes",
+            "navigators",
+            "ragequits",
+            "records",
+            "guild_tokens",
+            "event_transactions",
+            "delegations",
+            "navigator_events",
+            "nft_claims",
+            "signal_polls",
+            "signal_votes",
+            "timelock_changes",
+            "vesting_schedules",
+            "vesting_claims",
+            "budgets",
+            "budget_disbursements",
+            "subscription_members",
+            "subscription_payments",
+            "subscription_collections",
+            "vault_module_events",
+            "governance_config_history",
+            "indexer_state"
+          ]
+        },
+        {
+          "name": "query",
+          "label": "Query options",
+          "type": "json",
+          "optional": true,
+          "default": "{}"
+        }
+      ],
+      "effect": "read",
+      "category": "Indexer"
+    },
+    {
+      "path": "indexer count",
+      "description": "Count indexed rows with typed filters",
+      "fields": [
+        {
+          "name": "table",
+          "label": "Indexer table",
+          "type": "choice",
+          "choices": [
+            "daos",
+            "members",
+            "proposals",
+            "votes",
+            "navigators",
+            "ragequits",
+            "records",
+            "guild_tokens",
+            "event_transactions",
+            "delegations",
+            "navigator_events",
+            "nft_claims",
+            "signal_polls",
+            "signal_votes",
+            "timelock_changes",
+            "vesting_schedules",
+            "vesting_claims",
+            "budgets",
+            "budget_disbursements",
+            "subscription_members",
+            "subscription_payments",
+            "subscription_collections",
+            "vault_module_events",
+            "governance_config_history",
+            "indexer_state"
+          ]
+        },
+        {
+          "name": "query",
+          "label": "Query options",
+          "type": "json",
+          "optional": true,
+          "default": "{}"
+        }
+      ],
+      "effect": "read",
+      "category": "Indexer"
+    },
+    {
+      "path": "indexer get",
+      "description": "Fetch a row by its exact indexed ID",
+      "fields": [
+        {
+          "name": "table",
+          "label": "Indexer table",
+          "type": "choice",
+          "choices": [
+            "daos",
+            "members",
+            "proposals",
+            "votes",
+            "navigators",
+            "ragequits",
+            "records",
+            "guild_tokens",
+            "event_transactions",
+            "delegations",
+            "navigator_events",
+            "nft_claims",
+            "signal_polls",
+            "signal_votes",
+            "timelock_changes",
+            "vesting_schedules",
+            "vesting_claims",
+            "budgets",
+            "budget_disbursements",
+            "subscription_members",
+            "subscription_payments",
+            "subscription_collections",
+            "vault_module_events",
+            "governance_config_history",
+            "indexer_state"
+          ]
+        },
+        {
+          "name": "id",
+          "label": "Row ID",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Indexer"
+    },
+    {
+      "path": "activity list",
+      "description": "Browse this DAO’s indexed transaction history",
+      "fields": [
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "read",
+      "category": "Activity"
+    },
+    {
+      "path": "tx list",
+      "description": "Browse the local durable transaction journal",
+      "fields": [],
+      "effect": "local",
+      "category": "Tx"
+    },
+    {
+      "path": "tx show",
+      "description": "Inspect durable intent by operation ID",
+      "fields": [
+        {
+          "name": "id",
+          "label": "Operation ID",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Tx"
+    },
+    {
+      "path": "tx recover",
+      "description": "Reconcile a recorded send without broadcasting",
+      "fields": [
+        {
+          "name": "id",
+          "label": "Operation ID",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "hash",
+          "label": "Independent original transaction hash",
+          "type": "text",
+          "optional": true
+        },
+        {
+          "name": "replacement",
+          "label": "Replacement transaction hash",
+          "type": "text",
+          "optional": true
+        }
+      ],
+      "effect": "read",
+      "category": "Tx"
+    },
+    {
+      "path": "tx replacements",
+      "description": "Find replacement candidates in a bounded canonical block window",
+      "fields": [
+        {
+          "name": "id",
+          "label": "Operation ID",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "fromBlock",
+          "label": "First block",
+          "type": "number",
+          "optional": false
+        },
+        {
+          "name": "toBlock",
+          "label": "Last block",
+          "type": "number",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Tx"
+    },
+    {
+      "path": "tx wait",
+      "description": "Wait for a hash and verify its receipt status",
+      "fields": [
+        {
+          "name": "hash",
+          "label": "Transaction hash",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Tx"
+    },
+    {
+      "path": "tx events",
+      "description": "Decode a receipt into named events from an exact emitter",
+      "fields": [
+        {
+          "name": "kind",
+          "label": "Contract",
+          "type": "choice",
+          "choices": [
+            "BudgetNavigator",
+            "DAOShip",
+            "DAOShipAndVaultLauncher",
+            "DAOShipLauncher",
+            "ERC20TributeNavigator",
+            "LootERC20",
+            "NFTGatedNavigator",
+            "OnboarderNavigator",
+            "Poster",
+            "QuaiVault",
+            "QuaiVaultProxy",
+            "SharesERC20",
+            "SignalNavigator",
+            "SubscriptionNavigator",
+            "TimelockNavigator",
+            "VestingNavigator",
+            "QuaiVaultFactory"
+          ]
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "hash",
+          "label": "Transaction hash",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "event",
+          "label": "Event name or full signature",
+          "type": "text",
+          "optional": true
+        }
+      ],
+      "effect": "read",
+      "category": "Tx"
+    },
+    {
+      "path": "tx abandon",
+      "description": "Abandon only a provably unsent prepared operation",
+      "fields": [
+        {
+          "name": "id",
+          "label": "Operation ID",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Tx"
+    },
+    {
+      "path": "proposal encode",
+      "description": "Encode proposal actions and their commitment hash",
+      "fields": [
+        {
+          "name": "actions",
+          "label": "CALL-only actions",
+          "type": "json",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Proposal"
+    },
+    {
+      "path": "proposal decode",
+      "description": "Decode bounded CALL-only proposal calldata",
+      "fields": [
+        {
+          "name": "data",
+          "label": "Calldata",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Proposal"
+    },
+    {
+      "path": "governance encode",
+      "description": "Encode a privileged DAO governance call",
+      "fields": [
+        {
+          "name": "data",
+          "label": "JSON or @file.json",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "dao",
+          "label": "DAO address or alias",
+          "type": "address",
+          "optional": true,
+          "context": "dao"
+        }
+      ],
+      "effect": "local",
+      "category": "Governance"
+    },
+    {
+      "path": "poster publish",
+      "description": "Prepare validated DAOShips metadata",
+      "fields": [
+        {
+          "name": "poster",
+          "label": "Poster contract",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "tag",
+          "label": "Metadata tag",
+          "type": "choice",
+          "choices": [
+            "daoships.dao.profile.initial",
+            "daoships.dao.profile",
+            "daoships.dao.announcement",
+            "daoships.member.profile",
+            "daoships.proposal.vote.reason",
+            "daoships.navigator.allowlist",
+            "daoships.dao.navigators",
+            "daoships.signal.poll"
+          ]
+        },
+        {
+          "name": "data",
+          "label": "JSON or @file.json",
+          "type": "json",
+          "optional": false
+        }
+      ],
+      "effect": "write",
+      "category": "Poster"
+    },
+    {
+      "path": "allowlist build",
+      "description": "Build an OpenZeppelin-compatible address Merkle tree",
+      "fields": [
+        {
+          "name": "addresses",
+          "label": "Address array",
+          "type": "json",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Allowlist"
+    },
+    {
+      "path": "allowlist proof",
+      "description": "Get a membership proof from a tree",
+      "fields": [
+        {
+          "name": "tree",
+          "label": "Tree JSON or @file",
+          "type": "json",
+          "optional": false
+        },
+        {
+          "name": "account",
+          "label": "Member address",
+          "type": "address",
+          "optional": true,
+          "context": "from"
+        }
+      ],
+      "effect": "local",
+      "category": "Allowlist"
+    },
+    {
+      "path": "allowlist verify",
+      "description": "Verify a membership proof independently",
+      "fields": [
+        {
+          "name": "root",
+          "label": "Merkle root",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "address",
+          "label": "Contract address",
+          "type": "address",
+          "optional": false
+        },
+        {
+          "name": "proof",
+          "label": "Proof array",
+          "type": "json",
+          "optional": false
+        }
+      ],
+      "effect": "local",
+      "category": "Allowlist"
+    },
+    {
+      "path": "ipfs json",
+      "description": "Read bounded IPFS JSON",
+      "fields": [
+        {
+          "name": "resource",
+          "label": "CID or ipfs:// URI",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Ipfs"
+    },
+    {
+      "path": "ipfs abi",
+      "description": "Read bounded IPFS ABI",
+      "fields": [
+        {
+          "name": "resource",
+          "label": "CID or ipfs:// URI",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Ipfs"
+    },
+    {
+      "path": "ipfs bytecode",
+      "description": "Fetch bytecode with an independently trusted hash",
+      "fields": [
+        {
+          "name": "resource",
+          "label": "CID or ipfs:// URI",
+          "type": "text",
+          "optional": false
+        },
+        {
+          "name": "hash",
+          "label": "Expected keccak256",
+          "type": "text",
+          "optional": false
+        }
+      ],
+      "effect": "read",
+      "category": "Ipfs"
+    }
+  ]
+}

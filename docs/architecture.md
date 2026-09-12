@@ -1,0 +1,27 @@
+# Runtime architecture and integration findings
+
+`src/commands.ts` is the command registry and execution boundary. The Commander one-shot adapter and Ink TUI consume those definitions. ABI inspection supplies complete contract coverage and method forms. The TUI loads dynamically, so one-shot commands do not initialize React or Ink.
+
+`src/context.ts` owns network selection, public configuration, deadlines and keystore-backed wallet lookup. `src/rpc.ts` configures the published SDK provider for a single explicit Cyprus-1 HTTP endpoint. The SDK owns ABI validation, integer bounds, DAO simulations, proposal commitments, indexer validation, receipt parsing and Quai transaction nonce normalization.
+
+`src/actions.ts` uses SDK transaction recovery with `src/store.ts`, a SQLite implementation of the SDK's atomic compare-and-swap contract. Both normal sends and native CREATE share account nonce reservations and operation-ID claims. Native creation lives in `src/deployments.ts`: its constructor data and nonce are fixed in an SDK plan, the final signed request is compared with that plan, and the locally calculated hash is committed before the sole broadcast call. Signed bytes and private keys are never journaled. Uncertain sends stay blocked until chain evidence is reconciled.
+
+The TUI launches its own one-shot binary for signing and all secret-entry operations. Ink terminal suspension releases stdin and the alternate screen; the child inherits stdin/stderr while returning structured output over stdout. This avoids split keystrokes and keeps passwords out of React state. A forced termination deadline bounds cancellation of an unresponsive child. It supplies the exact reviewed hash, sender, network, operation ID, wallet reference and current limits. Request JSON passes through a private temporary file, removed after the child exits, so large requests do not exceed OS argument limits. The child executes the same core used by agents. Indexer labels and metadata are untrusted display text; terminal controls and bidi formatting are removed before rendering. Chain state determines write preconditions.
+
+`src/keystore.ts` implements V3 validation and encryption through quais. `src/secrets.ts` owns hidden prompts and bounded private-file reads. `src/wallets.ts` implements lifecycle commands. The database stores standard encrypted V3 JSON in separate documents; public configuration contains addresses and keystore kinds only. Multi-document compare-and-swap commits profiles and keys atomically and prevents concurrent settings changes from silently overwriting each other.
+
+## SDK integration findings
+
+The first CLI live probe found that `quais@1.0.0-alpha.53` treats `usePathing:true` as permission to append `/prime` and shard paths. Passing an already complete `/cyprus1` URL therefore produced `/cyprus1/prime`, followed by background retries. The SDK README's complete-endpoint examples currently use that option. The CLI configures `usePathing:false`, uses finite transport deadlines, and probes the actual chain ID on every `getNetwork()` call. This configuration should inform a future SDK documentation/provider-default update. SDK transaction/block normalization is reused unchanged.
+
+The upstream provider can write startup-retry messages to stdout. The CLI disables that discovery/bootstrap path while retaining fresh chain-ID validation, preserving structured stdout even when the endpoint is wrong. Tests switch a local endpoint from Orchard to mainnet and verify that the next identity check rejects it.
+
+SDK native CREATE requires a caller-owned executor, unlike ordinary prepared calls. The CLI supplies that missing application layer and verifies completion using the SDK deployment workflow verifier. DAO/vault governance remains explicit: a submitted activation proposal is not active permission, and a vault proposal is not executed setup.
+
+## Practical limits
+
+All ABI methods are callable, but friendly domain-specific presentations are deeper for common DAO/proposal/treasury flows; less common methods use ABI-derived forms and exact JSON details. Generic writes return named events and logs. Proposal processing, vault execution and token changes receive business-outcome checks on both execution and ordinary transaction recovery; deployment workflows verify their own postconditions. Indexer data can lag or omit contracts and metadata. Addresses and raw contract reads still work without an indexed entry.
+
+Recovery coordination covers processes using the same local state directory. Another application or another directory using the same key is outside that coordination. CREATE plans are nonce-dependent and must be rebuilt if another transaction consumes the nonce. Pending or ambiguous sends are reconciled rather than rebroadcast; a bounded `tx replacements` scan and explicit replacement-hash reconciliation are available for ordinary sends. Creating replacement or cancellation transactions is not automated. Confirmation depth is not a finality proof.
+
+The package targets Node 22.13+ because it uses built-in SQLite. Node versions where `node:sqlite` is experimental may print its standard warning to stderr. Tests use temporary local databases and offline fixture keys, never funded account keys. Public RPC/indexer read checks have passed on Orchard and mainnet. A separate funded Orchard acceptance run passed an encrypted-wallet self-transfer, canonical receipt recovery and repeated-ID no-replay checks. The live CLI acceptance run does not cover every DAO/navigator mutation.

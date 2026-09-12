@@ -1,0 +1,67 @@
+{
+  "name": "@daoships/cli",
+  "version": "0.1.0-alpha.1",
+  "description": "DAOShips terminal workspace and one-shot commands for humans and agents",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "daoships": "dist/bin.js",
+    "ds": "dist/bin.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "docs",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/bin.js",
+    "dev": "npm run build && node dist/bin.js tui",
+    "test": "npm run build && node scripts/test.mjs",
+    "test:package": "node scripts/package-test.mjs",
+    "test:orchard": "node scripts/orchard-acceptance.mjs",
+    "check": "npm test && npm run test:package",
+    "prepack": "npm run build",
+    "prepublishOnly": "node scripts/check-release.mjs && npm run check",
+    "check:release": "node scripts/check-release.mjs"
+  },
+  "dependencies": {
+    "@daoships/sdk": "0.1.0-alpha.3",
+    "@inquirer/password": "5.2.2",
+    "commander": "15.0.0",
+    "ink": "7.1.1",
+    "quais": "1.0.0-alpha.53",
+    "react": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.6",
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "daoships",
+    "quai",
+    "dao",
+    "governance",
+    "cli",
+    "tui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DAO-Ships/daoships-cli.git"
+  },
+  "homepage": "https://github.com/DAO-Ships/daoships-cli#readme",
+  "bugs": {
+    "url": "https://github.com/DAO-Ships/daoships-cli/issues"
+  }
+}

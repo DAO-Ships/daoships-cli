@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "network": "orchard",
+  "chainId": 15000,
+  "startedAt": "2026-09-11T22:17:22.817Z",
+  "completedAt": "2026-09-11T22:55:50.746Z",
+  "verifiedAt": "2026-09-11T23:04:13.306Z",
+  "cliVersion": "0.1.0-alpha.1",
+  "sdkVersion": "0.1.0-alpha.3",
+  "sdkCommit": "ac697f6",
+  "accounts": {
+    "owner": "0x0006506bDE7140b85DED58a40D7444F84cde4821",
+    "member": "0x001e38e6bA8E8E6F45d809Aa03420aCf112369b2"
+  },
+  "dao": "0x0069cD45da3Fc33682b6B0392ab8bE4c20D05266",
+  "navigators": {
+    "OnboarderNavigator": "0x0059f376e8ddA2746a5928Ea2A6C8f2795dc245c",
+    "ERC20TributeNavigator": "0x004366F7409ABc78f2eB1e20a0575744a256a2C6",
+    "NFTGatedNavigator": "0x001090E8c9bF62045f383B32862AE98C3902115c",
+    "SignalNavigator": "0x00625650b472933CbF7350a5a6F4A3482f5771E3",
+    "TimelockNavigator": "0x004571030dE5d5AA70FdbC3EdC629Eb740dbB8fd",
+    "VestingNavigator": "0x003bBA58BaF64cCac840DfCc6C6764B20aaCfBdf",
+    "BudgetNavigator": "0x001E7E4C16D4bE9e20848707786cf81F60f5a1F7",
+    "SubscriptionNavigator": "0x006c3Bf6622a206AD9755203c6E910C978305fE3"
+  },
+  "scenarios": [
+    "timelock-queue",
+    "governance-submit-vote",
+    "native-onboarding",
+    "signal-voting",
+    "governance-process",
+    "erc20-onboarding",
+    "nft-gating",
+    "subscription-payment",
+    "vesting-claim",
+    "budget-spending",
+    "proposal-cancellation",
+    "timelock-execution",
+    "ragequit",
+    "indexer-consistency",
+    "journal-recovery"
+  ],
+  "rejections": [
+    {
+      "test": "unauthorized-timelock-queue",
+      "error": "NotAuthorized"
+    },
+    {
+      "test": "premature-timelock",
+      "error": "ChangeNotReady"
+    },
+    {
+      "test": "onboard-underpayment",
+      "error": "InsufficientTribute"
+    },
+    {
+      "test": "duplicate-signal-vote",
+      "error": "AlreadyVoted"
+    },
+    {
+      "test": "missing-erc20-allowance",
+      "error": "ERC20InsufficientAllowance"
+    },
+    {
+      "test": "wrong-nft-owner",
+      "error": "NotHolder"
+    },
+    {
+      "test": "duplicate-nft-onboarding",
+      "error": "AlreadyClaimed"
+    },
+    {
+      "test": "subscription-underpayment",
+      "error": "IncorrectPayment"
+    },
+    {
+      "test": "premature-subscription-collection",
+      "error": "NotDelinquent"
+    },
+    {
+      "test": "unauthorized-vesting-claim",
+      "error": "NotAuthorized"
+    },
+    {
+      "test": "duplicate-vesting-claim",
+      "error": "NothingToClaim"
+    },
+    {
+      "test": "unauthorized-budget-spend",
+      "error": "NotAuthorized"
+    },
+    {
+      "test": "budget-period-ceiling",
+      "error": "AllowanceExceeded"
+    },
+    {
+      "test": "cancelled-budget-spend",
+      "error": "BudgetCancelled_"
+    },
+    {
+      "test": "timelock-wrong-commitment",
+      "error": "ConfigHashMismatch"
+    },
+    {
+      "test": "duplicate-timelock-execution",
+      "error": "ChangeAlreadyExecuted"
+    }
+  ],
+  "transactionCount": 23,
+  "nativeValueWei": "206",
+  "totalFeeWei": "4033866000000000",
+  "resume": {
+    "passed": true,
+    "additionalBroadcasts": 0,
+    "noncesBefore": {
+      "owner": 6780,
+      "member": 1565
+    },
+    "noncesAfter": {
+      "owner": 6780,
+      "member": 1565
+    }
+  },
+  "transactions": [
+    {
+      "operation": "timelock:propose",
+      "command": "contract write",
+      "wallet": "owner",
+      "hash": "0x004700132a332f57872a71586c52be4d8e3942b9b941c38848a4eb8fcffc059c",
+      "blockNumber": 7782788,
+      "gasUsed": "274967",
+      "gasPrice": "1200000000",
+      "feeWei": "329960400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "timelock:approve",
+      "command": "contract write",
+      "wallet": "owner",
+      "hash": "0x002f003aeb46cad0c0d6d7cb4860f6ce5c09fb41132ee632152930275e7431ab",
+      "blockNumber": 7782792,
+      "gasUsed": "72600",
+      "gasPrice": "1200000000",
+      "feeWei": "87120000000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "timelock:execute",
+      "command": "contract write",
+      "wallet": "owner",
+      "hash": "0x0074003307f98c058bcb7d886354b1b56d860e094fd774d5cd459d7921789095",
+      "blockNumber": 7782796,
+      "gasUsed": "164714",
+      "gasPrice": "1200000000",
+      "feeWei": "197656800000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "setup:submit",
+      "command": "proposal submit",
+      "wallet": "member",
+      "hash": "0x005e000926a8768de3060682dbafefb174046696acfae0356774a98b5018a07e",
+      "blockNumber": 7782824,
+      "gasUsed": "328621",
+      "gasPrice": "1200000000",
+      "feeWei": "394345200000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "setup:vote",
+      "command": "proposal vote",
+      "wallet": "member",
+      "hash": "0x00630006da6457af137570f1f06ef6a4aef994e0d4894382659e9cafa2133036",
+      "blockNumber": 7782829,
+      "gasUsed": "116449",
+      "gasPrice": "1200000000",
+      "feeWei": "139738800000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "onboard-native",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x003f001758edf30c7553d4d2c9f04c014dd0b33affc79751ff1864ffdb941232",
+      "blockNumber": 7782834,
+      "gasUsed": "179627",
+      "gasPrice": "1200000000",
+      "feeWei": "215552400000000",
+      "nativeValueWei": "5"
+    },
+    {
+      "operation": "poll-create",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x0033007b875a741edd201e3ce361880a7346dfc653d9f7205affeab774967fc1",
+      "blockNumber": 7782837,
+      "gasUsed": "115255",
+      "gasPrice": "1200000000",
+      "feeWei": "138306000000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "poll-vote",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x000f003df9c6bed3078841fcf2804fb0ee8106acffde3b1c8271ca7f93b0f8a8",
+      "blockNumber": 7782840,
+      "gasUsed": "87344",
+      "gasPrice": "1200000000",
+      "feeWei": "104812800000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "setup:process",
+      "command": "proposal process",
+      "wallet": "member",
+      "hash": "0x006d00462c6bf7eeb78ec1d16d7aabdb616274fca9b549dad0f06ffd9d36691f",
+      "blockNumber": 7782848,
+      "gasUsed": "411652",
+      "gasPrice": "1200000000",
+      "feeWei": "493982400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "erc20-approve",
+      "command": "token approve",
+      "wallet": "member",
+      "hash": "0x00680016421b78de11c1c9455d8a23737c79b9ee9d8fb45b5a7ac8a66357794a",
+      "blockNumber": 7782854,
+      "gasUsed": "44763",
+      "gasPrice": "1200000000",
+      "feeWei": "53715600000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "erc20-onboard",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x001c000c8e21100dfb7cf2b35b8360c2f0119486d41861375589198df18c758c",
+      "blockNumber": 7782858,
+      "gasUsed": "200699",
+      "gasPrice": "1200000000",
+      "feeWei": "240838800000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "nft-onboard",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x00040071901b1494b1f8f7d2ab977c85d672063acc9a13245525ae45a034a0a2",
+      "blockNumber": 7782864,
+      "gasUsed": "191273",
+      "gasPrice": "1200000000",
+      "feeWei": "229527600000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "subscription-pay",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x003a006e50ad56fd65f00f61b0e886566fe8b58732df6a65e726dd5b64884183",
+      "blockNumber": 7782870,
+      "gasUsed": "56758",
+      "gasPrice": "1200000000",
+      "feeWei": "68109600000000",
+      "nativeValueWei": "1"
+    },
+    {
+      "operation": "vesting-claim",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x00100050182c45d08612218f114b992629be1c82b44eb1fd2ef3f84b17e9ed94",
+      "blockNumber": 7782876,
+      "gasUsed": "157957",
+      "gasPrice": "1200000000",
+      "feeWei": "189548400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "budget-fund",
+      "command": "transfer",
+      "wallet": "owner",
+      "hash": "0x003600362b45b626f53a61b5aa2eee5fe8c4986509b32a0c5dde5550e422f153",
+      "blockNumber": 7782881,
+      "gasUsed": "22491",
+      "gasPrice": "1200000000",
+      "feeWei": "26989200000000",
+      "nativeValueWei": "200"
+    },
+    {
+      "operation": "budget-disburse",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x000c00133d5e9f3f3701b4a93215307b3ecf1429f82b2cfcc5d901611ab7660b",
+      "blockNumber": 7782889,
+      "gasUsed": "116060",
+      "gasPrice": "1200000000",
+      "feeWei": "139272000000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "budget-cancel:propose",
+      "command": "contract write",
+      "wallet": "owner",
+      "hash": "0x001e00336da63601f4a5716284da2878d45ea6e4062748f820a1ea8f5b2d9ee3",
+      "blockNumber": 7782895,
+      "gasUsed": "134662",
+      "gasPrice": "1200000000",
+      "feeWei": "161594400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "budget-cancel:approve",
+      "command": "contract write",
+      "wallet": "owner",
+      "hash": "0x006f004a11f41195b9741a4305004df3add037c79b5f6ed6c953b15189fc7b48",
+      "blockNumber": 7782898,
+      "gasUsed": "72958",
+      "gasPrice": "1200000000",
+      "feeWei": "87549600000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "budget-cancel:execute",
+      "command": "contract write",
+      "wallet": "owner",
+      "hash": "0x0076007beecd39dd84248fead29964d161dd4e9fe41c30a1566b9c75e5dca917",
+      "blockNumber": 7782901,
+      "gasUsed": "81622",
+      "gasPrice": "1200000000",
+      "feeWei": "97946400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "cancel:submit",
+      "command": "proposal submit",
+      "wallet": "member",
+      "hash": "0x0052002093f6281df43b058ee1375f4ec31c689c1897330db7b54bd76bb41d88",
+      "blockNumber": 7782928,
+      "gasUsed": "243332",
+      "gasPrice": "1200000000",
+      "feeWei": "291998400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "cancel:cancel",
+      "command": "proposal cancel",
+      "wallet": "member",
+      "hash": "0x004b003e0f5b3303fd424117081cfacd3d0c3ef61fcd2cb7f3d844c721ba4396",
+      "blockNumber": 7782931,
+      "gasUsed": "59827",
+      "gasPrice": "1200000000",
+      "feeWei": "71792400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "timelock-execute",
+      "command": "contract write",
+      "wallet": "member",
+      "hash": "0x00380033cb7a568d3182104aec46da1ace08a5f5f85e3b5a84c196d435065d2b",
+      "blockNumber": 7782939,
+      "gasUsed": "74877",
+      "gasPrice": "1200000000",
+      "feeWei": "89852400000000",
+      "nativeValueWei": "0"
+    },
+    {
+      "operation": "ragequit",
+      "command": "dao ragequit",
+      "wallet": "member",
+      "hash": "0x006b0076fb9d62f65632f8b644f8332ff2f76254505ffa085d33dbed493f1fa7",
+      "blockNumber": 7782944,
+      "gasUsed": "153047",
+      "gasPrice": "1200000000",
+      "feeWei": "183656400000000",
+      "nativeValueWei": "0"
+    }
+  ],
+  "limitations": [
+    "Two confirmations are not a finality guarantee.",
+    "The campaign upgraded SDK/CLI code after finding bugs; all records were revalidated using the final release candidates.",
+    "Core navigator lifecycles only; hour-long subscription delinquency, budget rollover, permit variants, other privileged branches and fresh deployments are not covered by this CLI run.",
+    "Mainnet reads only."
+  ]
+}

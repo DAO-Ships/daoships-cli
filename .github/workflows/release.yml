@@ -1,0 +1,73 @@
+name: Publish CLI to npm
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+concurrency:
+  group: npm-release-${{ github.ref }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  validate:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      archive-sha256: ${{ steps.archive.outputs.sha256 }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # checkout v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # setup-node v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm install --global npm@11.19.0 --ignore-scripts
+      - run: npm ci --ignore-scripts
+      - run: node scripts/check-release.mjs
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Validate and retain the exact release archive
+        id: archive
+        run: node scripts/package-test.mjs --registry-install --save-release
+      - name: Transfer the tested archive to the publisher
+        id: upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # upload-artifact v7.0.1
+        with:
+          name: cli-release-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .release/daoships-cli.tgz
+          if-no-files-found: error
+          include-hidden-files: true
+          compression-level: 0
+          retention-days: 7
+  publish:
+    if: vars.NPM_TRUSTED_PUBLISHING_ENABLED == 'true'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: npm
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # checkout v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # setup-node v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm install --global npm@11.19.0 --ignore-scripts
+      - name: Retrieve this run's validated archive
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # download-artifact v8.0.1
+        with:
+          artifact-ids: ${{ needs.validate.outputs.artifact-id }}
+          path: .release
+          merge-multiple: true
+      - name: Publish the validated package with npm provenance
+        run: node scripts/publish-release.mjs
+        env:
+          DAOSHIPS_RELEASE_SHA256: ${{ needs.validate.outputs.archive-sha256 }}
