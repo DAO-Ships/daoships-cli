@@ -1,6 +1,6 @@
 {
   "name": "@daoships/cli",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "DAOShips terminal workspace and one-shot commands for humans and agents",
   "license": "MIT",
   "type": "module",

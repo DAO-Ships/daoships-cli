@@ -12,7 +12,7 @@ The TUI launches its own one-shot binary for signing and all secret-entry operat
 
 ## SDK integration findings
 
-The first CLI live probe found that `quais@1.0.0-alpha.53` treats `usePathing:true` as permission to append `/prime` and shard paths. Passing an already complete `/cyprus1` URL therefore produced `/cyprus1/prime`, followed by background retries. The SDK README's complete-endpoint examples currently use that option. The CLI configures `usePathing:false`, uses finite transport deadlines, and probes the actual chain ID on every `getNetwork()` call. This configuration should inform a future SDK documentation/provider-default update. SDK transaction/block normalization is reused unchanged.
+The first CLI live probe found that `quais@1.0.0-alpha.53` treats `usePathing:true` as permission to append `/prime` and shard paths. Passing an already complete `/cyprus1` URL therefore produced `/cyprus1/prime`, followed by background retries. The earlier SDK README examples also used that option; the source documentation now uses `usePathing:false` for complete endpoints. The CLI configures `usePathing:false`, uses finite transport deadlines, and probes the actual chain ID on every `getNetwork()` call. The shared provider retains upstream constructor compatibility; applications choose explicit URL routing options. SDK transaction/block normalization is reused unchanged.
 
 The upstream provider can write startup-retry messages to stdout. The CLI disables that discovery/bootstrap path while retaining fresh chain-ID validation, preserving structured stdout even when the endpoint is wrong. Tests switch a local endpoint from Orchard to mainnet and verify that the next identity check rejects it.
 

@@ -577,7 +577,7 @@
     },
     {
       "path": "proposal process",
-      "description": "Execute the committed actions and verify their outcome",
+      "description": "Execute committed actions or close a defeated proposal and verify the outcome",
       "fields": [
         {
           "name": "proposal",
@@ -590,7 +590,7 @@
           "label": "Actions or committed calldata",
           "type": "json",
           "optional": true,
-          "hint": "Leave empty to fetch indexed calldata and verify it against the chain."
+          "hint": "Ready proposals need committed calldata; defeated closures need no actions or indexer."
         },
         {
           "name": "dao",

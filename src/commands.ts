@@ -119,11 +119,20 @@ add('proposal submit', 'Submit CALL-only actions for DAO governance', [field('ac
 });
 add('proposal vote', 'Vote for or against a sponsored proposal', [proposal, { name: 'vote', label: 'Your vote', type: 'choice', choices: ['yes', 'no'] }, dao], 'write', (ctx, p) => action(() => ctx.chain.prepareVote(ctx.dao(text(p, 'dao')), id(p), text(p, 'vote') === 'yes', ctx.from())));
 for (const verb of ['sponsor', 'cancel'] as const) add(`proposal ${verb}`, `${title(verb)} a proposal`, [proposal, dao], 'write', (ctx, p) => action(() => verb === 'sponsor' ? ctx.chain.prepareSponsor(ctx.dao(text(p, 'dao')), id(p), ctx.from()) : ctx.chain.prepareCancel(ctx.dao(text(p, 'dao')), id(p), ctx.from())));
-add('proposal process', 'Execute the committed actions and verify their outcome', [proposal, { name: 'actions', label: 'Actions or committed calldata', type: 'json', optional: true, hint: 'Leave empty to fetch indexed calldata and verify it against the chain.' }, dao], 'write', async (ctx, p) => {
+add('proposal process', 'Execute committed actions or close a defeated proposal and verify the outcome', [proposal, { name: 'actions', label: 'Actions or committed calldata', type: 'json', optional: true, hint: 'Ready proposals need committed calldata; defeated closures need no actions or indexer.' }, dao], 'write', (ctx, p) => {
   const address = ctx.dao(text(p, 'dao'));
-  const data = p.actions === undefined ? (await ctx.indexer.getProposalDetails(address, id(p), ctx.signal))?.proposal_data : proposalData(ctx, p.actions);
-  if (!data) return fail('Provide the proposal actions or a JSON string containing committed calldata.');
-  return action(() => ctx.chain.prepareProcess(address, id(p), ctx.from(), data), receipt => { sdk.assertActionSucceeded(receipt, address, id(p)); return { proposalId: id(p), executed: true }; });
+  const explicitData = p.actions === undefined ? undefined : proposalData(ctx, p.actions);
+  return action(async () => {
+    let data: string | undefined = explicitData;
+    if (data === undefined && (await ctx.chain.getProposal(address, id(p))).state === sdk.ProposalState.Ready) {
+      data = (await ctx.indexer.getProposalDetails(address, id(p), ctx.signal))?.proposal_data ?? undefined;
+      if (!data) return fail('Provide the proposal actions or a JSON string containing committed calldata.');
+    }
+    return ctx.chain.prepareProcess(address, id(p), ctx.from(), data);
+  }, receipt => {
+    const outcome = sdk.parseProcessReceipt(receipt, address, id(p));
+    return { proposalId: id(p), outcome, executed: outcome === 'executed', closed: outcome === 'defeated' };
+  });
 });
 
 add('contract kinds', 'List every SDK contract interface', [], 'local', () => Object.keys(sdk.CONTRACT_ABIS));
@@ -138,7 +147,6 @@ add('contract encode', 'Encode any contract write without RPC or signing', [kind
 add('contract write', 'Simulate and optionally send any SDK contract write', [kind, target, method, args, value], 'write', (ctx, p) => {
   const call = encoded(ctx, p);
   return action(() => ctx.chain.prepareCall(call, ctx.from()), receipt => {
-    if (p.kind === 'DAOShip' && call.operation.startsWith('processProposal')) sdk.assertActionSucceeded(receipt, call.to, integer((p.args as unknown[])[0], 'proposal', 0xffffffff));
     return { operation: call.operation, events: receiptEvents(contractKind(p.kind), call.to, receipt), logs: receipt.logs };
   });
 });

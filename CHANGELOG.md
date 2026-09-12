@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0-alpha.2
+
+- Process and recover intentional defeated-proposal closures successfully, reporting `outcome: "defeated"`, `executed: false`, and `closed: true`. Closures no longer need indexed calldata.
+- Preserve failure results for retention vetoes, reverted actions, missing events and mismatched proposal IDs.
+
 ## 0.1.0-alpha.1
 
 - Publish from GitHub version tags using npm trusted publishing, provenance and the exact tested archive.

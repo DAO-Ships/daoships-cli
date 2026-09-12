@@ -1,5 +1,5 @@
 import { Interface } from 'quais';
-import { CONTRACT_ABIS, assertActionSucceeded, parseContractEvents, type Receipt } from '@daoships/sdk';
+import { CONTRACT_ABIS, assertActionSucceeded, parseContractEvents, parseProcessReceipt, type Receipt } from '@daoships/sdk';
 import { CliError } from './values.js';
 
 const dao = new Interface(CONTRACT_ABIS.DAOShip), vault = new Interface(CONTRACT_ABIS.QuaiVault), token = new Interface(CONTRACT_ABIS.SharesERC20);
@@ -9,7 +9,10 @@ export function assertBusinessOutcome(tx: { from: string; to: string; data: stri
   const selector = tx.data.slice(0, 10);
   if (selector === dao.getFunction('processProposal')!.selector) {
     const args = dao.decodeFunctionData('processProposal', tx.data);
-    assertActionSucceeded(receipt, tx.to, Number(args[0]));
+    const outcome = parseProcessReceipt(receipt, tx.to, Number(args[0]));
+    // Empty data can intentionally close an already defeated proposal. A nonempty
+    // execution intent that loses to retention must still return a failure.
+    if (args[1] !== '0x' || outcome !== 'defeated') assertActionSucceeded(receipt, tx.to, Number(args[0]));
   }
   if (['executeTransaction', 'execTransactionFromModule(address,uint256,bytes)', 'execTransactionFromModule(address,uint256,bytes,uint8)', 'execTransactionFromModuleReturnData'].some(name => vault.getFunction(name)?.selector === selector)) {
     const failed = parseContractEvents(receipt, 'QuaiVault', tx.to, 'TransactionFailed').length || parseContractEvents(receipt, 'QuaiVault', tx.to, 'ExecutionFromModuleFailure').length;

@@ -41,7 +41,7 @@ Every positional command also accepts `daoships run "command path" '{"field":"va
 | `proposal vote <proposal> <vote> [dao]` | write | Vote for or against a sponsored proposal |
 | `proposal sponsor <proposal> [dao]` | write | Sponsor a proposal |
 | `proposal cancel <proposal> [dao]` | write | Cancel a proposal |
-| `proposal process <proposal> [actions] [dao]` | write | Execute the committed actions and verify their outcome |
+| `proposal process <proposal> [actions] [dao]` | write | Execute committed actions or close a defeated proposal and verify the outcome |
 | `contract kinds ` | local | List every SDK contract interface |
 | `contract methods <kind>` | local | Discover typed reads, writes and overloads |
 | `contract events <kind>` | local | Discover event signatures and named fields |

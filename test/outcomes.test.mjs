@@ -1,15 +1,58 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Interface } from 'quais';
-import { CONTRACT_ABIS } from '@daoships/sdk';
+import { CONTRACT_ABIS, ProposalState } from '@daoships/sdk';
 import { assertBusinessOutcome } from '../dist/outcomes.js';
 import { transact } from '../dist/actions.js';
 import { execute, findCommand } from '../dist/commands.js';
 import { spawnCommand } from '../dist/tui/child.js';
-import { context, prepared, transport, A, B, D, HASH } from './helpers.mjs';
+import { context, prepared, transport, override, A, B, D, HASH } from './helpers.mjs';
 
 const vault = new Interface(CONTRACT_ABIS.QuaiVault), token = new Interface(CONTRACT_ABIS.SharesERC20);
 const event = (iface, name, args, address = B) => ({ address, ...iface.encodeEventLog(iface.getEvent(name), args) });
+const dao = new Interface(CONTRACT_ABIS.DAOShip);
+test('defeated closure succeeds only for empty action data; failed execution and retention veto remain errors', () => {
+  const tx = { from: A, to: B, data: dao.encodeFunctionData('processProposal', [7, '0x']) };
+  const receipt = { status: 1, logs: [event(dao, 'ProcessProposal', [7, false, false, A])] };
+  assert.doesNotThrow(() => assertBusinessOutcome(tx, receipt));
+  assert.throws(() => assertBusinessOutcome({ ...tx, data: dao.encodeFunctionData('processProposal', [7, '0x1234']) }, receipt), { code: 'PROPOSAL_DEFEATED' });
+  assert.throws(() => assertBusinessOutcome(tx, { status: 1, logs: [event(dao, 'ProcessProposal', [7, true, true, A])] }), { code: 'ACTION_FAILED' });
+  for (const logs of [[], [event(dao, 'ProcessProposal', [8, false, false, A])], [event(dao, 'ProcessProposal', [7, false, false, A], D)]]) {
+    assert.throws(() => assertBusinessOutcome(tx, { status: 1, logs }), { code: 'MISSING_EVENT' });
+  }
+});
+test('named and generic proposal closure verify the outcome and recover without another send', async t => {
+  for (const generic of [false, true]) {
+    const ctx = await context(t, { dao: B, send: true, yes: true, id: 'defeated-close' });
+    const tx = prepared({ data: dao.encodeFunctionData('processProposal', [7, '0x']), operation: 'processProposal' });
+    const f = transport(ctx, tx);
+    f.receipt.logs = [event(dao, 'ProcessProposal', [7, false, false, A])];
+    override(ctx, { indexer: { getProposalDetails: () => assert.fail('Closure must not require indexed calldata') }, chain: {
+      getProposal: async () => ({ state: ProposalState.Defeated }),
+      prepareProcess: async (address, id, from, data) => { assert.equal(address, B); assert.equal(id, 7); assert.equal(from, A); assert.equal(data, undefined); return tx; },
+      prepareCall: async call => { assert.equal(call.data, tx.data); return tx; },
+    } });
+    const result = generic
+      ? await execute(ctx, findCommand('contract write'), { kind: 'DAOShip', address: B, method: 'processProposal', args: ['7', '0x'] })
+      : await execute(ctx, findCommand('proposal process'), { proposal: '7' });
+    assert.equal(result.mode, 'mined');
+    if (!generic) assert.deepEqual(result.result, { proposalId: 7, outcome: 'defeated', executed: false, closed: true });
+    assert.equal((await execute(ctx, findCommand('tx recover'), { id: 'defeated-close' })).outcome, 'mined');
+    assert.equal(f.calls.length, 1);
+  }
+});
+test('ready proposal processing still requires committed data and refreshes indexed input', async t => {
+  const ctx = await context(t, { dao: B }); let indexedData = null, preparations = 0;
+  override(ctx, { indexer: { getProposalDetails: async () => ({ proposal_data: indexedData }) }, chain: {
+    getProposal: async () => ({ state: ProposalState.Ready }),
+    prepareProcess: async (_address, _id, _from, data) => { preparations++; assert.equal(data, '0x1234'); return prepared(); },
+  } });
+  await assert.rejects(execute(ctx, findCommand('proposal process'), { proposal: '7' }), { code: 'USAGE' });
+  assert.equal(preparations, 0);
+  indexedData = '0x1234';
+  assert.equal((await execute(ctx, findCommand('proposal process'), { proposal: '7' })).mode, 'preview');
+  assert.equal(preparations, 1);
+});
 test('vault inner execution failures never become success and only the exact emitter counts', () => {
   const data = vault.encodeFunctionData('execTransactionFromModule(address,uint256,bytes)', [D, 0n, '0x']);
   const tx = { from: A, to: B, data }, failure = event(vault, 'ExecutionFromModuleFailure', [A]);
