@@ -280,6 +280,6 @@ export async function startTui(context: Context): Promise<void> {
   let active = context;
   const app = render(<App initialContext={context} reconfigure={async (changeNetwork) => {
     const previous = active; active = await Context.open({ ...previous.flags, network: changeNetwork ? previous.config.network : previous.network, configDir: previous.store.directory }); previous.close(); return active;
-  }}/>, { alternateScreen: true, exitOnCtrlC: false });
+  }}/>, { interactive: true, alternateScreen: true, exitOnCtrlC: false });
   try { await app.waitUntilExit(); } finally { app.unmount(); active.close(); }
 }

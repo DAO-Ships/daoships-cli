@@ -11,5 +11,5 @@ const open = async () => {
   Object.defineProperty(active, 'indexer', { value: { list: async () => ({ items: [], nextOffset: null }) } });
   previous?.close(); return active;
 };
-const app = render(React.createElement(App, { initialContext: await open(), reconfigure: open }), { alternateScreen: true, exitOnCtrlC: false });
+const app = render(React.createElement(App, { initialContext: await open(), reconfigure: open }), { interactive: true, alternateScreen: true, exitOnCtrlC: false });
 try { await app.waitUntilExit(); } finally { app.unmount(); active.close(); }

@@ -9,6 +9,7 @@
 - Rename `--env-file` to `--key-env-file` for explicit key import. Node intercepts `--env-file` before application validation, even after the script path; the new flag avoids automatic environment loading. Internal child commands also separate Node arguments with `--`.
 - Use SDK `0.1.0-alpha.3`, correcting the parent-block EVM timestamp used by proposal preflights.
 - Wait for the actual asynchronous read result in the TUI interaction test instead of relying on a short fixed delay.
+- Keep the TUI interactive in a verified terminal even when CI environment variables are present.
 
 ## 0.1.0-alpha.0
 

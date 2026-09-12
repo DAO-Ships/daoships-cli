@@ -18,7 +18,7 @@ test('keyboard flow selects a DAO, searches commands and opens guided navigator 
   const daoInterface = new Interface(CONTRACT_ABIS.DAOShip);
   override(ctx, { provider: { call: async request => daoInterface.encodeFunctionResult(daoInterface.parseTransaction(request).fragment, [7n]) }, indexer: { list: async () => ({ items: [{ id: B, name: 'Test collective' }], nextOffset: null }), listNavigators: async () => ({ items: [], nextOffset: null }) },
     chain: { getDao: async () => ({ ...prepared().checkedAt, checkedAt: prepared().checkedAt, address: B, votingPeriod: 60n, gracePeriod: 0n, quorumPercent: 5000n, proposalOffering: 0n }) } });
-  const app = render(React.createElement(App, { initialContext: ctx, reconfigure: async () => ctx }), { stdin, stdout, stderr, exitOnCtrlC: false });
+  const app = render(React.createElement(App, { initialContext: ctx, reconfigure: async () => ctx }), { stdin, stdout, stderr, interactive: true, exitOnCtrlC: false });
   t.after(() => { app.unmount(); stdin.destroy(); stdout.destroy(); stderr.destroy(); });
   const text = () => stripVTControlCharacters(output);
   const waitFor = async pattern => {
