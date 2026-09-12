@@ -20,8 +20,8 @@ test('release metadata binds the package, tag, repository and npm channel', () =
   for (const version of ['1.0.0-latest', '1.0.0-alpha.01', '1.0.0-x', '1.0.0-v1', '1.0.0+build']) {
     assert.throws(() => validateReleaseMetadata({ ...manifest, version }, { ...context, ref: `refs/tags/v${version}` }));
   }
-  for (const ref of ['refs/heads/main', 'refs/tags/v0.0.0', undefined]) {
-    if (ref !== undefined) assert.throws(() => validateReleaseMetadata(manifest, { ...context, ref }));
+  for (const ref of ['refs/heads/main', 'refs/tags/v0.0.0']) {
+    assert.throws(() => validateReleaseMetadata(manifest, { ...context, ref }));
   }
   assert.throws(() => validateReleaseMetadata(manifest, { ...context, licenseText: '' }));
 });

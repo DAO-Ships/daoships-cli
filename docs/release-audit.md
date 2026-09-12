@@ -55,3 +55,9 @@ The final 64-test CLI suite passed on Node 22, 24 and 26. A subsequent regressio
 Orchard paused while confirming budget cancellation. The CLI kept the hash, returned `TX_PENDING`, and recovered the original successful transaction after block production resumed. The harness now preserves intermediate budget assertions across that resume and retries only known reads and unsigned simulations for transient RPC failures. Sends and ambiguous outcomes are never automatically retried.
 
 This run does not cover every privileged branch, fresh CLI deployments, permit variants, hour-long subscription delinquency or budget period rollover. The earlier local ABI, Solidity and TUI tests still provide complementary coverage; the live run does not replace those tests or establish finality.
+
+## GitHub release path
+
+Releases use matching GitHub version tags and npm trusted publishing. The CLI workflow validates the package and a clean registry consumer, transfers the tested archive to a separate publisher job, and verifies its checksum before publication with provenance. Tests cover package/tag/repository mismatches, modified archives and refusal to run the publisher from a workstation. The complete local suite passed 68 tests after these additions.
+
+SDK `0.1.0-alpha.3` was published by [GitHub run 34700999432](https://github.com/DAO-Ships/daoships-sdk/actions/runs/34700999432), after source/contract acceptance and CI passed on commit `ac697f6ac8c80344c33ef94d5255ff324f850a5c`. The registry archive matches the GitHub-tested artifact, and npm provenance identifies that commit and `v0.1.0-alpha.3`. The CLI lockfile uses this published archive's integrity. See [release instructions](releasing.md) for the CLI's independent trusted publisher setup and release sequence.
