@@ -1,6 +1,6 @@
 {
   "name": "@daoships/cli",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "description": "DAOShips terminal workspace and one-shot commands for humans and agents",
   "license": "MIT",
   "type": "module",
@@ -32,7 +32,7 @@
     "check:release": "node scripts/check-release.mjs"
   },
   "dependencies": {
-    "@daoships/sdk": "0.1.0-alpha.3",
+    "@daoships/sdk": "0.1.0-alpha.4",
     "@inquirer/password": "5.2.2",
     "commander": "15.0.0",
     "ink": "7.1.1",

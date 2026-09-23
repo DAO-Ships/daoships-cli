@@ -1,15 +1,16 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-alpha.3
 
+- Use SDK `0.1.0-alpha.4`. Member and DAO profile reads resolve records the hosted
+  indexer holds (the SDK's tag filters previously matched nothing, so existing member
+  profiles showed as absent) and order same-block updates by their actual event position.
+  Mined-deployment and transaction recovery can now read historical mainnet blocks.
 - Verify reverted navigator deployments on older mainnet blocks. quais (through
   1.0.0-alpha.57) throws `BAD_DATA` from `getBlock()` for mainnet blocks more than a
   few hundred thousand behind the head, whose `totalEntropy` the node returns as null,
   so `deploy recover` could not settle a reverted CREATE there. The receipt block is
   now read raw when quais cannot format it; mismatched blocks still fail closed.
-- Mined-deployment recovery and transaction recovery run through the SDK and get the
-  same fix once the CLI moves to an SDK release that includes it (unreleased in
-  `@daoships/sdk` after `0.1.0-alpha.3`).
 
 ## 0.1.0-alpha.2
 

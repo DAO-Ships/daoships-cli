@@ -2,7 +2,7 @@
 
 A terminal workspace for collective decisions on Quai. Browse DAOs, participate in governance, manage treasury and navigators, and recover transactions from the same commands humans and agents use in scripts.
 
-Built against the **`@daoships/sdk@0.1.0-alpha.3`**, with React and Ink. The CLI is distributed on npm under the `alpha` tag.
+Built against the **`@daoships/sdk@0.1.0-alpha.4`**, with React and Ink. The CLI is distributed on npm under the `alpha` tag.
 
 ## Start here
 

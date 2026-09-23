@@ -20,7 +20,7 @@ try {
     await exec('npm', ['install', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund', '--registry=https://registry.npmjs.org/'], { cwd: installed, timeout: 180_000, maxBuffer: 4 * 1024 * 1024 });
   }
   const manifest = JSON.parse(await readFile(join(installed, 'package.json'), 'utf8'));
-  assert.equal(manifest.dependencies['@daoships/sdk'], '0.1.0-alpha.3'); assert.equal(manifest.bin.daoships, manifest.bin.ds);
+  assert.equal(manifest.dependencies['@daoships/sdk'], '0.1.0-alpha.4'); assert.equal(manifest.bin.daoships, manifest.bin.ds);
   assert.ok((await stat(join(installed, manifest.bin.daoships))).mode & 0o111);
   for (const args of [['--version'], ['--schema'], ['--json', 'network', 'list'], ['--json', 'contract', 'methods', 'OnboarderNavigator']]) {
     const result = await exec(process.execPath, [join(installed, manifest.bin.daoships), '--config-dir', join(directory, 'state'), ...args], { cwd: directory, maxBuffer: 4 * 1024 * 1024 });
