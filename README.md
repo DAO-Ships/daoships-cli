@@ -2,14 +2,14 @@
 
 A terminal workspace for collective decisions on Quai. Browse DAOs, participate in governance, manage treasury and navigators, and recover transactions from the same commands humans and agents use in scripts.
 
-Built against the **`@daoships/sdk@0.1.0-alpha.4`**, with React and Ink. The CLI is distributed on npm under the `alpha` tag.
+Built against the **`@daoships/sdk@0.1.0-alpha.4`**, with React and Ink. Each tagged release is published to npm's `latest` dist-tag.
 
 ## Start here
 
 Node **22.13 or newer** is required; Node 24 LTS is a good default.
 
 ```sh
-npm install -g @daoships/cli@alpha
+npm install -g @daoships/cli
 daoships tui
 ```
 

@@ -9,7 +9,7 @@ const licenseText = await readFile(new URL('../LICENSE', import.meta.url), 'utf8
 const context = { licenseText, ref: `refs/tags/v${manifest.version}`, repository: 'DAO-Ships/daoships-cli' };
 
 test('release metadata binds the package, tag, repository and npm channel', () => {
-  assert.deepEqual(validateReleaseMetadata(manifest, context), { version: manifest.version, distTag: 'alpha' });
+  assert.deepEqual(validateReleaseMetadata(manifest, context), { version: manifest.version, distTag: 'latest' });
   const stable = { ...manifest, version: '1.0.0' };
   assert.equal(validateReleaseMetadata(stable, { ...context, ref: 'refs/tags/v1.0.0' }).distTag, 'latest');
   for (const change of [{ name: '@other/cli' }, { private: true }, { license: 'UNLICENSED' },

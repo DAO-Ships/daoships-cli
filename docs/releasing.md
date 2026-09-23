@@ -14,7 +14,7 @@ See [npm's trusted publisher instructions](https://docs.npmjs.com/trusted-publis
 2. Update the CLI version, lockfile, changelog and SDK dependency together. Run `npm run check` and `node scripts/package-test.mjs --registry-install`.
 3. Commit and push the release to `main`. Require successful CLI validation on that exact commit on Node 22, 24 and 26.
 4. Create an annotated tag matching `package.json` exactly, for example `git tag -a v0.1.0-alpha.1 -m 'Release CLI 0.1.0-alpha.1'`, then push that tag.
-5. Monitor the release workflow. Its unprivileged job validates metadata, tests, audits dependencies and installs the packed CLI in a clean consumer. A separate OIDC job verifies the archive checksum and publishes those tested bytes with provenance. Prereleases use their named channel (`alpha`); stable releases use `latest`.
+5. Monitor the release workflow. Its unprivileged job validates metadata, tests, audits dependencies and installs the packed CLI in a clean consumer. A separate OIDC job verifies the archive checksum and publishes those tested bytes with provenance. Every tagged release, prerelease or stable, publishes to `latest`, so a plain install gets it. Trusted publishing authorizes only `npm publish`, which sets one dist-tag, so the historical `alpha` dist-tag is no longer advanced.
 6. Verify the npm version, integrity, provenance, dist-tag and a fresh installation. Record the workflow URL and source commit.
 
 If authentication fails, correct the trusted publisher settings and rerun the failed workflow on the same tag. Never move an existing release tag or substitute a locally built archive. If the version already exists, verify its provenance and integrity before taking further action; published versions cannot be overwritten.
