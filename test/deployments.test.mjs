@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Interface, QuaiTransaction, Wallet, toBeHex } from 'quais';
+import { Interface, QuaiTransaction, Shard, Wallet, toBeHex } from 'quais';
 import * as sdk from '@daoships/sdk';
 import { deployNavigator, readPlan, grindCreation, recoverCreation, creationKey } from '../dist/deployments.js';
 import { claimOperation } from '../dist/actions.js';
@@ -76,4 +76,41 @@ test('signing failure releases a CREATE reservation while preserving its unsent 
 test('regular transactions and CREATE share a single operation-ID namespace', async t => {
   const ctx = await context(t); claimOperation(ctx, 'same', 'transaction', 'hash1');
   assert.throws(() => claimOperation(ctx, 'same', 'creation', 'hash2'), { code: 'RECOVERY_CONFLICT' });
+});
+// quais throws this from getBlock() for older mainnet blocks, whose totalEntropy the node returns as null.
+const badData = () => Object.assign(new Error('invalid value for value.totalEntropy'), { code: 'BAD_DATA' });
+async function revertedAtOldBlock(t, rawBlock) {
+  const f = await fixture(t); f.state.failBroadcast = true;
+  await assert.rejects(deployNavigator(f.ctx, f.plan), { code: 'TX_PENDING' });
+  f.state.receipt = { hash: f.state.tx.hash, status: 0, from: wallet.address, to: null, blockNumber: 3, blockHash: BLOCK, logs: [] };
+  const sent = [];
+  override(f.ctx.provider, {
+    getBlock: async (_s, tag) => { if (tag === 'latest') return { hash: BLOCK, woHeader: { number: 5 } }; throw badData(); },
+    send: async (method, params, shard) => { sent.push([method, params, shard]); return rawBlock; },
+  });
+  return { f, sent };
+}
+test('reverted CREATE recovery verifies its receipt block when quais cannot format it', async t => {
+  const { f, sent } = await revertedAtOldBlock(t, { hash: BLOCK, totalEntropy: null, woHeader: { number: '0x3' }, transactions: [] });
+  const result = await recoverCreation(f.ctx, 'create-one');
+  assert.equal(result.outcome, 'reverted');
+  assert.deepEqual(sent, [['quai_getBlockByNumber', ['0x3', false], Shard.Cyprus1]]);
+  assert.equal((await f.ctx.store.read(sdk.recoveryAccountKey(15000, wallet.address))).blockedBy, null);
+});
+test('reverted CREATE recovery still fails closed on a raw block that does not match its receipt', async t => {
+  const other = await revertedAtOldBlock(t, { hash: '0x' + '99'.repeat(32), woHeader: { number: '0x3' }, transactions: [] });
+  await assert.rejects(recoverCreation(other.f.ctx, 'create-one'), { code: 'TX_PENDING' });
+  assert.equal(other.f.ctx.store.get(creationKey('create-one')).status === 'reverted', false);
+});
+test('CLI block reads keep getBlock results and propagate failures other than formatting', async t => {
+  const ctx = await context(t); const formatted = { hash: BLOCK, woHeader: { number: 7 } };
+  override(ctx, { provider: { getBlock: async () => formatted, send: async () => assert.fail('must not read raw') } });
+  assert.equal(await ctx.block(7), formatted);
+  const network = Object.assign(new Error('socket hang up'), { code: 'NETWORK_ERROR' });
+  override(ctx, { provider: { getBlock: async () => { throw network; }, send: async () => assert.fail('must not read raw') } });
+  await assert.rejects(ctx.block(7), error => error === network);
+  override(ctx, { provider: { getBlock: async () => { throw badData(); }, send: async () => ({ hash: BLOCK, woHeader: { number: '0x8' } }) } });
+  await assert.rejects(ctx.block(7), { code: 'INVALID_RESPONSE' });
+  override(ctx, { provider: { getBlock: async () => { throw badData(); }, send: async () => null } });
+  assert.equal(await ctx.block(7), null);
 });

@@ -140,6 +140,21 @@ export class Context {
     } finally { clearTimeout(timer); if (abort) this.signal.removeEventListener('abort', abort); }
   }
   async head() { await this.assertNetwork(); const block = await this.rpc(() => this.provider.getBlock(Shard.Cyprus1, 'latest')); return { number: block?.woHeader.number, hash: block?.hash, timestamp: block?.woHeader.timestamp }; }
+  /** The block at a height. quais (through 1.0.0-alpha.57) throws BAD_DATA from getBlock() for older mainnet
+   * blocks, whose totalEntropy the node returns as null; read those raw, keeping only the fields checks use. */
+  async block(number: number): Promise<{ hash: string; woHeader: { number: number } } | null> {
+    try { return await this.rpc(() => this.provider.getBlock(Shard.Cyprus1, number)); }
+    catch (cause) {
+      if ((cause as { code?: unknown } | null)?.code !== 'BAD_DATA') throw cause;
+      const raw: unknown = await this.rpc(() => this.provider.send('quai_getBlockByNumber', [`0x${number.toString(16)}`, false], Shard.Cyprus1));
+      if (raw === null) return null;
+      const block = raw as { hash?: unknown; woHeader?: { number?: unknown } }, height = block.woHeader?.number;
+      if (typeof block.hash !== 'string' || !/^0x[\da-f]{64}$/i.test(block.hash) || typeof height !== 'string' || !/^0x[\da-f]+$/i.test(height) || Number(height) !== number) {
+        throw new CliError('INVALID_RESPONSE', 'RPC returned an invalid block.', { number }, 1);
+      }
+      return { hash: block.hash, woHeader: { number } };
+    }
+  }
   async assertNetwork(): Promise<void> {
     if ((await this.rpc(() => this.provider.getNetwork())).chainId !== BigInt(this.chainId)) throw new CliError('CHAIN_MISMATCH', 'RPC network differs from the selected network.', {}, 3);
   }

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { setImmediate } from 'node:timers/promises';
-import { ContractFactory, Interface, QuaiTransaction, Zone, Shard, keccak256, toUtf8Bytes } from 'quais';
+import { ContractFactory, Interface, QuaiTransaction, Zone, keccak256, toUtf8Bytes } from 'quais';
 import * as sdk from '@daoships/sdk';
 import type { Context } from './context.js';
 import { claimOperation, consent, transact } from './actions.js';
@@ -141,7 +141,7 @@ export async function recoverCreation(ctx: Context, id: string, abandon = false)
   const receipt = await ctx.rpc(() => ctx.provider.getTransactionReceipt(record!.hash!));
   if (!receipt) return { outcome: 'pending', record };
   if (receipt.status === 0) {
-    const [tx, block, head] = await Promise.all([ctx.rpc(() => ctx.provider.getTransaction(record!.hash!)), ctx.rpc(() => ctx.provider.getBlock(Shard.Cyprus1, receipt.blockNumber)), ctx.head()]);
+    const [tx, block, head] = await Promise.all([ctx.rpc(() => ctx.provider.getTransaction(record!.hash!)), ctx.block(receipt.blockNumber), ctx.head()]);
     if (!tx || !('from' in tx) || tx.chainId !== BigInt(ctx.chainId) || tx.from.toLowerCase() !== plan.from.toLowerCase() || tx.to !== null || tx.data.toLowerCase() !== plan.creationData.toLowerCase() || tx.nonce !== plan.quaiCreation!.nonce || tx.value !== 0n
       || receipt.hash !== record.hash || receipt.from.toLowerCase() !== plan.from.toLowerCase() || receipt.to !== null || block?.hash !== receipt.blockHash || block?.woHeader.number !== receipt.blockNumber || (head.number ?? 0) - receipt.blockNumber + 1 < ctx.confirmations) throw new CliError('TX_PENDING', 'Deployment receipt is not yet verified.', { id, hash: record.hash }, 4);
     record = updateCreation(ctx, record, { status: 'reverted' }); await releaseCreation(ctx, record, true); return { outcome: 'reverted', record };
